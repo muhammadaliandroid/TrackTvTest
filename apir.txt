@@ -1,0 +1,14 @@
+http://api.trakt.tv/movieDomain/summary.format/apikey/title
+http://api.trakt.tv/search/movies.format/apikey?query=query&limit=limit
+
+
+https://api.trakt.tv/movies/trending/1234567890abcdefghijklmnopqrstuv
+http://api.trakt.tv/search/movies.#{format}/#{api_key}?query=#{CGI::escape movie_to_search}
+
+
+Client ID: 0e7e55d561c7e688868a5ea7d2c82b17e59fde95fbc2437e809b1449850d4162 
+Client Secret: acac2f8984eff126f39d2aa53ce08366733fda1013cc6e5e09699dadbbab517f 
+
+
+
+
