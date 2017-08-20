@@ -15,19 +15,19 @@ import java.util.concurrent.Executors
 class TraktUseCase {
 
 
-    var internetExecutor: Executor = Executors.newCachedThreadPool()
-    var internetScheduler = Schedulers.from(internetExecutor)
+    val internetExecutor: Executor = Executors.newCachedThreadPool()
+    val internetScheduler = Schedulers.from(internetExecutor)
 
     lateinit var scheduler: Scheduler
     lateinit var repository: IDataRepository
 
-    fun TraktUsecase(scheduler: Scheduler, repository: IDataRepository){
+    fun TraktUsecase(scheduler: Scheduler, repository: IDataRepository) {
         this.repository = repository
         this.scheduler = scheduler
     }
 
 
-    fun getTraktDomainFromObservable(tag: String, observer: DisposableObserver<List<TraktDomain>>) {
+    fun getTraktDomainFromObservable(observer: DisposableObserver<List<TraktDomain>>) {
 
         repository.getTraktDataObservable()
                 .subscribeOn(internetScheduler)

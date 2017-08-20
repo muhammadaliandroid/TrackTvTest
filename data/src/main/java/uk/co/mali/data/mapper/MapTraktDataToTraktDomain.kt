@@ -59,11 +59,11 @@ class MapTraktDataToTraktDomain
         }
 
         fun map_Image_Url_From_TMDB_to_ImageDomain(tmdb: TMDB):ImagesDomain{
+            println("")
             imagesDomain= ImagesDomain()
             var link: String = "https://image.tmdb.org/t/p/w640"
             imagesDomain!!.banner!!.path=link+tmdb!!.posterPath
             return imagesDomain as ImagesDomain
-
         }
 
 

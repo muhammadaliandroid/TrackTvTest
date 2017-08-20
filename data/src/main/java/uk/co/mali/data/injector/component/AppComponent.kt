@@ -17,6 +17,7 @@ import uk.co.mali.data.util.IRxSchedulers
 @AppScope
 @Component(modules = arrayOf(NetModule::class, RxModule::class, RestApiServiceTraktModule::class, RestApiServiceTmdbModule::class))
 interface AppComponent {
+
     fun inject(dataRepository: DataRepository)
     fun iRxSchedulers(): IRxSchedulers
     fun restApiServiceTrakt(): RestApiTrakt

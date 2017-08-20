@@ -2,6 +2,7 @@ package uk.co.mali.data
 
 import android.app.Application
 import uk.co.mali.data.injector.component.AppComponent
+import uk.co.mali.data.injector.component.DaggerAppComponent
 import uk.co.mali.data.injector.module.NetModule
 import uk.co.mali.data.injector.module.RestApiServiceTmdbModule
 import uk.co.mali.data.injector.module.RestApiServiceTraktModule
@@ -21,6 +22,7 @@ class TraktTvApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+
         appComponent = DaggerAppComponent.builder()
                 .netModule(NetModule(this))
                 .rxModule(RxModule())

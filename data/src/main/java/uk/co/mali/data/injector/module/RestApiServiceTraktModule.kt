@@ -20,11 +20,9 @@ class RestApiServiceTraktModule {
     @AppScope
     @Provides
     fun provideRestApiServiceTrakt(client:OkHttpClient, gson: GsonConverterFactory, rxAdapter: RxJava2CallAdapterFactory): RestApiTrakt
-
     {
         var retrofit: Retrofit = Retrofit.Builder().client(client).baseUrl(Constants.Constants.URL_BASE_TRAKT).addConverterFactory(gson).addCallAdapterFactory(rxAdapter).build()
         return retrofit.create(RestApiTrakt::class.java)
-
     }
 
 

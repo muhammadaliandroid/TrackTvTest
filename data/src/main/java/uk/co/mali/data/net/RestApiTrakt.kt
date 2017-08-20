@@ -11,10 +11,13 @@ import uk.co.mali.data.util.Constants
  */
 interface RestApiTrakt {
 
+
+
+
     @Headers(
-            Constants.Constants.TRAKT_HEADER_1_TRAKT_API_VERSION,
-            Constants.Constants.TRAKT_HEADER_2_TRAKT_API_KEY,
-            Constants.Constants.TRAKT_HEADER_3_TRAKT_API_CONTENT_TYPE)
+            Constants.Constants.HEADER_PARAM_CONTENT_TYPE + ":" + Constants.Constants.TRAKT_HEADER_3_TRAKT_API_CONTENT_TYPE,
+            Constants.Constants.HEADER_PARAM_API_VERSION + ": " + Constants.Constants.TRAKT_HEADER_1_TRAKT_API_VERSION,
+            Constants.Constants.HEADER_PARAM_API_KEY + ": " + Constants.Constants.TRAKT_HEADER_2_TRAKT_API_KEY)
 
     @GET
     (Constants.Constants.URL_TRACKT_TRENDING_MOVIES)

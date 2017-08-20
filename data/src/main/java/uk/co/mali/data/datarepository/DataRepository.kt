@@ -21,8 +21,8 @@ class DataRepository : IDataRepository {
 
 
     @Inject lateinit var iRxSchedulers : IRxSchedulers
-    @Inject lateinit var restApiTrakt: RestApiTrakt
-    @Inject lateinit var restApiTmdb: RestApiTmdb
+    @Inject lateinit var restApiServiceTrakt: RestApiTrakt
+    @Inject lateinit var restApiServiceTmdb: RestApiTmdb
 
     var traktDomain : TraktDomain? = null
 
@@ -32,9 +32,10 @@ class DataRepository : IDataRepository {
 
 
     override fun getTraktDataObservable(): Observable<List<TraktDomain>> {
+
         println("getTraktDataObservable(): Called")
         traktDomain = TraktDomain()
-        var traktListObservable: Observable<List<Trakt>> = restApiTrakt.getTrektDataObservable()
+        var traktListObservable: Observable<List<Trakt>> = restApiServiceTrakt.getTrektDataObservable()
         val traktDomainListObservable =
                 traktListObservable.map(Function<List<Trakt>, List<TraktDomain>>
         {trakt -> MapTraktDataToTraktDomain.map_Trakt_List_To_Trakt_Domain(trakt) }
@@ -47,9 +48,8 @@ class DataRepository : IDataRepository {
 
         println("getTmdbDataObservable(): Called")
         var tmdbObservable: Observable<TMDB>
-        tmdbObservable = restApiTmdb.getTMDBDataObservable(tag)
+        tmdbObservable = restApiServiceTmdb.getTMDBDataObservable(tag)
         val imageDomainObservable = tmdbObservable.map(Function<TMDB, ImagesDomain> { data -> MapTraktDataToTraktDomain.map_Image_Url_From_TMDB_to_ImageDomain(data) })
-
         return imageDomainObservable
 
     }

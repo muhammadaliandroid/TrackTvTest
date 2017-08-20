@@ -10,6 +10,7 @@ import uk.co.mali.domain.model.pojo.trakt.TraktDomain
 interface IDataRepository {
 
     fun getTraktDataObservable(): Observable<List<TraktDomain>>
+
     fun getTmdbDataObservable(tag:Int): Observable<ImagesDomain>
 
 }
