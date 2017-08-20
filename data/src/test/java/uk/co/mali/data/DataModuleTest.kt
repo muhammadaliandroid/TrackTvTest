@@ -14,7 +14,6 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 import uk.co.mali.data.model.pojo.tmdb.TMDB
-import uk.co.mali.data.model.pojo.trakt.Trakt
 import uk.co.mali.data.net.RestApiTmdb
 import uk.co.mali.data.net.RestApiTrakt
 import uk.co.mali.data.util.Constants

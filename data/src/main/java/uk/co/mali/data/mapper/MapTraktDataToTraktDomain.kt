@@ -5,7 +5,7 @@ import uk.co.mali.data.model.pojo.trakt.Ids
 import uk.co.mali.data.model.pojo.trakt.Movie
 import uk.co.mali.data.model.pojo.trakt.Trakt
 import uk.co.mali.domain.model.pojo.trakt.IdsDomain
-import uk.co.mali.domain.model.pojo.trakt.ImagesDomain
+import uk.co.mali.domain.model.pojo.trakt.ImageDomain
 import uk.co.mali.domain.model.pojo.trakt.MovieDomain
 import uk.co.mali.domain.model.pojo.trakt.TraktDomain
 
@@ -16,54 +16,57 @@ class MapTraktDataToTraktDomain
 
 {
     companion object {
-        var imagesDomain: ImagesDomain?=null
+        var imageDomain: ImageDomain?=null
         var movieDomain: MovieDomain?=null
         var traktDomain: TraktDomain?=null
         var traktDomainList: List<TraktDomain>? = null
         var idsDomain: IdsDomain?=null
 
         fun map_Trakt_List_To_Trakt_Domain(traktList:List<Trakt>?):List<TraktDomain>{
+            println("Data:Mapper: map_Trakt_List_To_Trakt_Domain ")
             traktDomainList = ArrayList<TraktDomain>()
             for(trakt in traktList!!){
-                (traktDomainList as ArrayList<TraktDomain>).add(map_Trakt_Data_to_TraktDomain(trakt))
+               println(trakt.getMovie())
+                    (traktDomainList as ArrayList<TraktDomain>).add(map_Trakt_Data_to_TraktDomain(trakt))
             }
             return traktDomainList as ArrayList<TraktDomain>
         }
 
         fun map_Trakt_Data_to_TraktDomain(traktData: Trakt?): TraktDomain{
+            println("Data: Mapper: map_Trakt_Data_to_TraktDomain")
             traktDomain = TraktDomain()
-            traktDomain!!.watchers = traktData!!.watchers
-            traktDomain!!.movieDomain= map_Movie_Data_to_MovieDomain(traktData.movie)
+            traktDomain!!.setWatchers(traktData!!.getWatchers())
+
+            traktDomain!!.setMovieDomain(map_Movie_Data_to_MovieDomain(traktData!!.getMovie()))
             return traktDomain as TraktDomain
         }
 
         fun map_Movie_Data_to_MovieDomain(movieData: Movie?):MovieDomain{
+            println("Mapper: map_Movie_Data_to_MovieDomain")
+
             movieDomain = MovieDomain()
-            movieDomain!!.certification = movieData!!.certification
-            movieDomain!!.genres = movieData!!.genres
-            movieDomain!!.homepage = movieData!!.homepage
-            movieDomain!!.language=movieData!!.language
-            movieDomain!!.overview=movieData!!.overview
-            movieDomain!!.title=movieData!!.title
-            movieDomain!!.year=movieData!!.year
-            movieDomain!!.rating=movieData!!.rating
-            movieDomain!!.tagline=movieData.tagline
-            movieDomain!!.idsDomain= map_Ids_Data_to_IdsDomain(movieData.ids!!)
+
+            movieDomain!!.setTitle(movieData!!.getTitle()!!)
+            movieDomain!!.setYear(movieData!!.getYear())
+            movieDomain!!.setIdsDomain(map_Ids_Data_to_IdsDomain(movieData!!.getIds()!!))
+
             return movieDomain as MovieDomain
+
         }
 
         fun map_Ids_Data_to_IdsDomain(ids: Ids):IdsDomain{
+            println("Data: Mapper: map_Ids_Data_to_IdsDomain")
             idsDomain = IdsDomain()
-            idsDomain!!.tmdb = ids!!.tmdb
+            idsDomain!!.setTmdb(ids!!.getTmdb())
             return idsDomain as IdsDomain
         }
 
-        fun map_Image_Url_From_TMDB_to_ImageDomain(tmdb: TMDB):ImagesDomain{
-            println("")
-            imagesDomain= ImagesDomain()
+        fun map_Image_Url_From_TMDB_to_ImageDomain(tmdb: TMDB): ImageDomain {
+            println("Data: Mapper: map_Image_Url_From_TMDB_to_ImageDomain")
+            imageDomain= ImageDomain()
             var link: String = "https://image.tmdb.org/t/p/w640"
-            imagesDomain!!.banner!!.path=link+tmdb!!.posterPath
-            return imagesDomain as ImagesDomain
+            imageDomain!!.setPath(link+tmdb!!.getPosterPath())
+            return imageDomain as ImageDomain
         }
 
 

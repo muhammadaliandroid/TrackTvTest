@@ -1,6 +1,8 @@
 package uk.co.mali.data
 
 import android.app.Application
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import uk.co.mali.data.injector.component.AppComponent
 import uk.co.mali.data.injector.component.DaggerAppComponent
 import uk.co.mali.data.injector.module.NetModule
@@ -30,7 +32,15 @@ class TraktTvApplication: Application() {
                 .restApiServiceTmdbModule(RestApiServiceTmdbModule())
                 .build()
 
-        //TODO do some other cool stuff here
+        initRealm()
+
+    }
+
+    private fun initRealm() {
+        Realm.init(applicationContext)
+
+        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build()
+        Realm.setDefaultConfiguration(config)
     }
 
 

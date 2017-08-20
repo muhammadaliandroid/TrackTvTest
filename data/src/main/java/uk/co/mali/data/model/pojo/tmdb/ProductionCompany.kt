@@ -12,9 +12,25 @@ class ProductionCompany {
 
     @SerializedName("name")
     @Expose
-    var name: String? = null
+    private var name: String? = null
     @SerializedName("id")
     @Expose
-    var id: Int? = null
+    private var id: Int? = null
+
+    fun getName(): String? {
+        return name
+    }
+
+    fun setName(name: String) {
+        this.name = name
+    }
+
+    fun getId(): Int? {
+        return id
+    }
+
+    fun setId(id: Int?) {
+        this.id = id
+    }
 
 }

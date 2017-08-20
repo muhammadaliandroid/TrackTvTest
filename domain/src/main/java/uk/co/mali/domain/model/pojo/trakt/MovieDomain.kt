@@ -7,22 +7,42 @@ package uk.co.mali.domain.model.pojo.trakt
 class MovieDomain {
 
 
-    var title: String? = null
-    var year: Int? = null
-    var idsDomain: IdsDomain? = null
-    var tagline: String? = null
-    var overview: String? = null
-    var released: String? = null
-    var runtime: Int? = null
-    var trailer: String? = null
-    var homepage: String? = null
-    var rating: Double? = null
-    var votes: Int? = null
-    var updatedAt: String? = null
-    var language: String? = null
-    var availableTranslations: List<String>? = null
-    var genres: List<String>? = null
-    var certification: String? = null
-    var imagesDomain: ImagesDomain? = null
+    private var title: String? = null
+    private var year: Int? = null
+    private var idsDomain: IdsDomain? = null
+    private var imageDomain: ImageDomain? = null
+
+
+    fun getTitle(): String? {
+        return title
+    }
+
+    fun setTitle(title: String) {
+        this.title = title
+    }
+
+    fun getYear(): Int? {
+        return year
+    }
+
+    fun setYear(year: Int?) {
+        this.year = year
+    }
+
+    fun getIdsDomain(): IdsDomain? {
+        return idsDomain
+    }
+
+    fun setIdsDomain(ids: IdsDomain) {
+        this.idsDomain = ids
+    }
+
+    fun getImageDomain(): ImageDomain? {
+        return imageDomain
+    }
+
+    fun setImageDomain(imageDomain: ImageDomain) {
+        this.imageDomain = imageDomain
+    }
 
 }

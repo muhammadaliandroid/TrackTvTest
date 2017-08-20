@@ -8,11 +8,29 @@ import com.google.gson.annotations.SerializedName
 
 class Genre {
 
+
     @SerializedName("id")
     @Expose
-    var id: Int? = null
+    private var id: Int? = null
     @SerializedName("name")
     @Expose
-    var name: String? = null
+    private var name: String? = null
+
+    fun getId(): Int? {
+        return id
+    }
+
+    fun setId(id: Int?) {
+        this.id = id
+    }
+
+    fun getName(): String? {
+        return name
+    }
+
+    fun setName(name: String) {
+        this.name = name
+    }
+
 
 }

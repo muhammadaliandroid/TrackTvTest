@@ -7,9 +7,24 @@ package uk.co.mali.domain.model.pojo.trakt
 
 class TraktDomain {
 
+    private var watchers: Int? = null
+    private var movieDomain: MovieDomain? = null
 
-    constructor()
-    var watchers: Int? = null
-    var movieDomain: MovieDomain? = null
+    fun getWatchers(): Int? {
+        return watchers
+    }
+
+    fun setWatchers(watchers: Int?) {
+        this.watchers = watchers
+    }
+
+    fun getMovieDomain(): MovieDomain? {
+        return movieDomain
+    }
+
+    fun setMovieDomain(movie: MovieDomain) {
+        this.movieDomain = movie
+    }
+
 
 }

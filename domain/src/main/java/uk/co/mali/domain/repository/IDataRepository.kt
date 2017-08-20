@@ -1,7 +1,7 @@
 package uk.co.mali.domain.repository
 
 import io.reactivex.Observable
-import uk.co.mali.domain.model.pojo.trakt.ImagesDomain
+
 import uk.co.mali.domain.model.pojo.trakt.TraktDomain
 
 /**
@@ -9,8 +9,13 @@ import uk.co.mali.domain.model.pojo.trakt.TraktDomain
  */
 interface IDataRepository {
 
+    fun getCacheMovieData()  //REALM Cache
+
+    //fun findAllMovieData(): List<TraktMovieInfo> //Realm List: id
+    //fun findAllMovieImage():List<ImageMovieInfo>// Realm - List : id M.id == I.id path:
+
     fun getTraktDataObservable(): Observable<List<TraktDomain>>
 
-    fun getTmdbDataObservable(tag:Int): Observable<ImagesDomain>
+    fun getTmdbDataObservable(tag:Int)
 
 }

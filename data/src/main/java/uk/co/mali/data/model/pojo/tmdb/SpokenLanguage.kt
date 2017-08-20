@@ -12,9 +12,25 @@ class SpokenLanguage {
 
     @SerializedName("iso_639_1")
     @Expose
-    var iso6391: String? = null
+    private var iso6391: String? = null
     @SerializedName("name")
     @Expose
-    var name: String? = null
+    private var name: String? = null
+
+    fun getIso6391(): String? {
+        return iso6391
+    }
+
+    fun setIso6391(iso6391: String) {
+        this.iso6391 = iso6391
+    }
+
+    fun getName(): String? {
+        return name
+    }
+
+    fun setName(name: String) {
+        this.name = name
+    }
 
 }
