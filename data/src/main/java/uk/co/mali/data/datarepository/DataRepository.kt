@@ -11,12 +11,13 @@ import uk.co.mali.data.net.RestApiTrakt
 import uk.co.mali.data.util.IRxSchedulers
 import uk.co.mali.domain.model.pojo.trakt.ImagesDomain
 import uk.co.mali.domain.model.pojo.trakt.TraktDomain
+import uk.co.mali.domain.repository.IDataRepository
 import javax.inject.Inject
 
 /**
  * Created by alig2 on 19/08/2017.
  */
-class DataRepository {
+class DataRepository : IDataRepository {
 
 
     @Inject lateinit var iRxSchedulers : IRxSchedulers
@@ -30,7 +31,7 @@ class DataRepository {
     }
 
 
-    fun getTraktDataObservable(): Observable<List<TraktDomain>>? {
+    override fun getTraktDataObservable(): Observable<List<TraktDomain>> {
         println("getTraktDataObservable(): Called")
         traktDomain = TraktDomain()
         var traktListObservable: Observable<List<Trakt>> = restApiTrakt.getTrektDataObservable()
@@ -42,13 +43,14 @@ class DataRepository {
     }
 
 
-    fun getTmdbDataObservable(tag:Int): Observable<TMDB>{
+    override fun getTmdbDataObservable(tag:Int): Observable<ImagesDomain>{
 
         println("getTmdbDataObservable(): Called")
         var tmdbObservable: Observable<TMDB>
         tmdbObservable = restApiTmdb.getTMDBDataObservable(tag)
-        tmdbObservable.map { Function<TMDB,ImagesDomain>{ tmdb -> MapTraktDataToTraktDomain.map_Image_Url_From_TMDB_to_ImageDomain(tmdb)} }
-        return tmdbObservable
+        val imageDomainObservable = tmdbObservable.map(Function<TMDB, ImagesDomain> { data -> MapTraktDataToTraktDomain.map_Image_Url_From_TMDB_to_ImageDomain(data) })
+
+        return imageDomainObservable
 
     }
 
