@@ -50,8 +50,8 @@ class Presenter {
         val listOfImages: List<ImageMovieInfo> = movieDao.find_List_Of_All_Images_Of_Movies()
 
         for(image in listOfImages){
-            println("App: Presenter: From Cache:  Image url: "+image.getid())
-            println("App: Presenter: From Cache: Image id: "+image.getImageUrl())
+            println("App: Presenter: From Cache:  Image id: "+image.getid())
+            println("App: Presenter: From Cache: Image url: "+image.getImageUrl())
         }
     }
 

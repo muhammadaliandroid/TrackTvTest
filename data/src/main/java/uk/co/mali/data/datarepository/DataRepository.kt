@@ -61,17 +61,19 @@ class DataRepository : IDataRepository {
 
                     for (data  in dataList) {
                         cache.putTraktObjectInRealm(MapTrakToMovieRealm().map_Movie_From_TRAKT_to_Realm_Return_TraktMovieInfo(data))
+                        getTmdbDataObservable(data.getMovie()!!.getIds()!!.getTmdb()!!)
+
                         //cache.putTraktList(MapTrakToMovieRealm().map_RealmList_to_Rest_TRAKT_List(traktList = dataList))
 
                     }
                 } catch (e: ParseException) {
                     e.printStackTrace()
                 }
-                finally {
-                    for (trakt in dataList) {
-                        getTmdbDataObservable(trakt.getMovie()!!.getIds()!!.getTmdb()!!)
-                    }
-                }
+//                finally {
+//                    for (trakt in dataList) {
+//                        getTmdbDataObservable(trakt.getMovie()!!.getIds()!!.getTmdb()!!)
+//                    }
+//                }
 
             }
 
@@ -113,7 +115,7 @@ class DataRepository : IDataRepository {
                 counter++
                 println("Data: DataRepository: TMDB Called: Counter Value: counter:" + counter)
                 try {
-                    cache.putImageList(MapTrakToMovieRealm().map_Image_URL_From_TMDB_to_Realm_Return_TraktMovieInfo(data))
+                    cache.putImageObjectRealm(MapTrakToMovieRealm().map_Image_URL_From_TMDB_to_Realm_Return_TraktMovieInfo(data))
 
 
 

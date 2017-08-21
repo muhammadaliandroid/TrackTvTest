@@ -80,10 +80,9 @@ class CacheProcessor {
     }
 
 
-    fun putImageList(image: ImageMovieInfo){
+    fun putImageObjectRealm(image: ImageMovieInfo){
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-
         realm.copyToRealmOrUpdate(image)
         realm.commitTransaction()
         realm.close()

@@ -25,7 +25,6 @@ class MapTrakToMovieRealm {
         // val copy = list.toMutableList()
 
         for (trakt in traktList) {
-            imageMovieInfo.setId(trakt.getMovie()!!.getIds()!!.getTmdb())
             list.add(map_Movie_From_TRAKT_to_Realm_Return_TraktMovieInfo(trakt))
         }
 
@@ -46,6 +45,7 @@ class MapTrakToMovieRealm {
     }
 
     fun map_Image_URL_From_TMDB_to_Realm_Return_TraktMovieInfo(tmdb: TMDB): ImageMovieInfo {
+        imageMovieInfo.setId(tmdb.getId())
         var link: String = "https://image.tmdb.org/t/p/w640"
         imageMovieInfo.setImageUrl(link + tmdb.getPosterPath())
         return imageMovieInfo
