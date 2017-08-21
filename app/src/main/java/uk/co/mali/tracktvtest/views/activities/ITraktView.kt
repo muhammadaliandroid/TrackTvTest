@@ -10,5 +10,6 @@ interface ITraktView {
 
     fun send_List_Of_Movies(movieList: List<TraktMovieInfo>)
     fun send_List_Of_Images(imagesList: List<ImageMovieInfo>)
+    fun startImageActivity(imageLink: String?)
 
 }

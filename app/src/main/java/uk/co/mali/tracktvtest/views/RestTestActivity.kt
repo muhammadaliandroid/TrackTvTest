@@ -15,9 +15,9 @@ class RestTestActivity : AppCompatActivity(){
 
        super.onCreate(savedInstanceState)
 
-       // val presenter : Presenter = Presenter()
+       // val traktPresenter : TraktPresenter = TraktPresenter()
 
-       // presenter.initializeMoviesDataList(this)
+       // traktPresenter.initializeMoviesDataList(this)
 
 
 

@@ -11,11 +11,18 @@ import uk.co.mali.tracktvtest.R
 /**
  * Created by alig2 on 21/08/2017.
  */
-class TraktListViewHolder : RecyclerView.ViewHolder {
+class TraktListViewHolder : RecyclerView.ViewHolder, View.OnClickListener{
+    override fun onClick(v: View?) {
+        onListItemClicked!!.onListItemClicked(v!!, adapterPosition)
+    }
 
     var tv_title : TextView? = null
     var movieImage : ImageView? = null
     var tv_year : TextView? = null
+
+    private var onListItemClicked: OnListItemClicked? = null
+
+
 
     constructor(itemView:View) : super(itemView) {
         println("App: Adapter: ViewHolder Constructor")
@@ -23,16 +30,22 @@ class TraktListViewHolder : RecyclerView.ViewHolder {
         tv_title= itemView.findViewById(R.id.tv_Movie_Title)
         movieImage= itemView.findViewById(R.id.iv_Movie_Image)
         tv_year = itemView.findViewById(R.id.tv_Movie_Year)
+        itemView.setOnClickListener(this)
     }
+
+
     fun bind(movie: TraktMovieInfo, image: String?) {
 
         println("App: Adapter: Bind: images: "+image)
         println("App: Adapter: Bind: movie: id:  "+movie.getid())
 
-
         tv_title!!.setText(movie.getTitle()!!)
         Glide.with(itemView.getContext()).load(image.toString()!!).into(movieImage)
-       // tv_year!!.setText(movie.getYear()!!)
 
     }
+
+    fun setOnListItemClicked(onListItemClicked: OnListItemClicked) {
+        this.onListItemClicked = onListItemClicked
+    }
+
 }

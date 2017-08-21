@@ -3,10 +3,12 @@ package uk.co.mali.tracktvtest.views.adapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import uk.co.mali.data.cache.ImageMovieInfo
 import uk.co.mali.data.cache.TraktMovieInfo
 import uk.co.mali.tracktvtest.R
+import uk.co.mali.tracktvtest.views.activities.MainActivity
 import java.util.*
 
 /**
@@ -50,6 +52,13 @@ class TraktRecyclerAdapter(private val context: Context) : RecyclerView.Adapter<
         println("App: Adapter: Bind: Method: movie: id:  "+movie.getid())
 
         holder!!.bind(movie,imageLink)
+        holder.setOnListItemClicked(object : OnListItemClicked {
+            override fun onListItemClicked(view: View, position: Int) {
+                (context as MainActivity).startImageActivity(imageLink)
+            }
+
+        })
+
 
     }
 

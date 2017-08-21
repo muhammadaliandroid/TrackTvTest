@@ -13,7 +13,7 @@ import javax.inject.Inject
  * Created by alig2 on 19/08/2017.
  */
 
-class Presenter(var iTrackview: ITraktView) {
+class TraktPresenter(var iTrackview: ITraktView) {
 
     @Inject lateinit var movieDao : MovieDao
 
@@ -35,7 +35,6 @@ class Presenter(var iTrackview: ITraktView) {
 
 
     fun onCreate(){
-        println("Presenter")
         movieDao.add_Records_of_All_Movies_from_Trakt_And_TMDB_API()
            }
 
@@ -43,8 +42,8 @@ class Presenter(var iTrackview: ITraktView) {
     fun get_Movie_list_From_Movie_DAO(){
         val listOfMovies: List<TraktMovieInfo> = movieDao.find_List_Of_All_Trending_Movies_Records()
         for(movie in listOfMovies){
-            println("App: Presenter: Cache: Movie name: "+movie.getTitle())
-            println("App: Presenter: Cahce: Movie Id: "+movie.getid())
+            println("App: TraktPresenter: Cache: Movie name: "+movie.getTitle())
+            println("App: TraktPresenter: Cahce: Movie Id: "+movie.getid())
         }
         iTrackview.send_List_Of_Movies(listOfMovies)
 
@@ -55,45 +54,32 @@ class Presenter(var iTrackview: ITraktView) {
         val listOfImages: List<ImageMovieInfo> = movieDao.find_List_Of_All_Images_Of_Movies()
 
         for(image in listOfImages){
-            println("App: Presenter: From Cache:  Image id: "+image.getid())
-            println("App: Presenter: From Cache: Image url: "+image.getImageUrl())
+            println("App: TraktPresenter: From Cache:  Image id: "+image.getid())
+            println("App: TraktPresenter: From Cache: Image url: "+image.getImageUrl())
         }
         iTrackview.send_List_Of_Images(listOfImages)
     }
 
-    fun onPause(){
-
-
-    }
-    fun onStop(){
-
-
-    }
-
-    fun onDestroy(){
-
-
-    }
 
 //    fun initializeMoviesDataList(context: Context){
 //        //  listTraktDomains!!.removeAll(listOf())
 //
-//        println("App: Presenter: initializeMoviesDataList: Called")
+//        println("App: TraktPresenter: initializeMoviesDataList: Called")
 //
 //        traktUseCase.getTraktDomainFromObservable(object : DisposableObserver<List<TraktDomain>>() {
 //
 //            override fun onNext(traktDomainList: List<TraktDomain>) {
-//                println("App: Presenter: initializeMoviesDataList: onNext : TRAKT Observer Called")
+//                println("App: TraktPresenter: initializeMoviesDataList: onNext : TRAKT Observer Called")
 //                for (trakt in traktDomainList){
 //                    var tag : Int? = trakt.getMovieDomain()?.getIdsDomain()?.getTmdb()
 //                    callTmdbRestServicePath(tag!!,trakt)
 //                }
 //            }
 //            override fun onError(e: Throwable) {
-//                println("App: Presenter: initializeMoviesDataList: onError : TRAKT Observer Called: {${e.printStackTrace()}}")
+//                println("App: TraktPresenter: initializeMoviesDataList: onError : TRAKT Observer Called: {${e.printStackTrace()}}")
 //            }
 //            override fun onComplete() {
-//                println("App: Presenter: initializeMoviesDataList: onComplete : TRAKT Observer Called: }")
+//                println("App: TraktPresenter: initializeMoviesDataList: onComplete : TRAKT Observer Called: }")
 //
 //            }
 //        })
@@ -101,7 +87,7 @@ class Presenter(var iTrackview: ITraktView) {
 //    fun callTmdbRestServicePath(tag:Int,trakt:TraktDomain){
 //        traktUseCase.getImageDomainFromObservable(tag,object : DisposableObserver<ImageDomain>() {
 //            override fun onNext(imageDomain: ImageDomain){
-//                println("App: Presenter: callTmdbRestServicePath: onNext : TMDB Observer Called : Path: "+imageDomain.getPath())
+//                println("App: TraktPresenter: callTmdbRestServicePath: onNext : TMDB Observer Called : Path: "+imageDomain.getPath())
 //                trakt.getMovieDomain()!!.setImageDomain(imageDomain)!!
 //                listTraktDomains!!.add(trakt)
 //                println("App: new listTrakDomain Add Element : Size "+listTraktDomains!!.size)
@@ -109,13 +95,13 @@ class Presenter(var iTrackview: ITraktView) {
 //            }
 //
 //            override fun onError(e: Throwable) {
-//                println("App: Presenter: callTmdbRestServicePath: onError : TMDB Observer Called: {${e.printStackTrace()}")
+//                println("App: TraktPresenter: callTmdbRestServicePath: onError : TMDB Observer Called: {${e.printStackTrace()}")
 //
 //            }
 //
 //            override fun onComplete() {
 //
-//                println("App: Presenter: callTmdbRestServicePath: onComplete : TMDB Observer Called")
+//                println("App: TraktPresenter: callTmdbRestServicePath: onComplete : TMDB Observer Called")
 //
 //            }
 //        })
