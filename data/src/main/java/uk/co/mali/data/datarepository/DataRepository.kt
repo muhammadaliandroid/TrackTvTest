@@ -29,31 +29,28 @@ import javax.inject.Inject
 class DataRepository : IDataRepository {
 
 
-
-    @Inject lateinit var iRxSchedulers : IRxSchedulers
+    @Inject lateinit var iRxSchedulers: IRxSchedulers
     @Inject lateinit var restApiServiceTrakt: RestApiTrakt
     @Inject lateinit var restApiServiceTmdb: RestApiTmdb
 
-    val mapperRealm:MapTrakToMovieRealm= MapTrakToMovieRealm()
+    val mapperRealm: MapTrakToMovieRealm = MapTrakToMovieRealm()
     private val scheduler1 = Schedulers.from(Executors.newCachedThreadPool())
     private val scheduler2 = Schedulers.from(Executors.newCachedThreadPool())
     val cache: CacheProcessor = CacheProcessor()
 
-    var traktDomain : TraktDomain? = null
+    var traktDomain: TraktDomain? = null
 
     init {
         TraktTvApplication.appComponent.inject(this)
     }
 
-   override fun getCacheMovieData(){
-        if(cache.isCached()&&!cache.isExpired())
-        {
-            var traktMovieObservable : List<TraktMovieInfo> = cache.getMovieList()
-        }
-        else{
-           var traktListObservable: Observable<List<Trakt>> = restApiServiceTrakt.getTrektDataObservable()
+    override fun getCacheMovieData() {
+       // if (cache.isCached() && !cache.isExpired()) {
+        //    var traktMovieObservable: List<TraktMovieInfo> = cache.getMovieList()
+       /// } else {
+            var traktListObservable: Observable<List<Trakt>> = restApiServiceTrakt.getTrektDataObservable()
             doNext(traktListObservable)
-        }
+       // }
     }
 
     private fun doNext(traktListObservable: Observable<List<Trakt>>) {
@@ -62,13 +59,16 @@ class DataRepository : IDataRepository {
             override fun onNext(dataList: List<Trakt>) {
                 try {
 
-                    cache.putTraktList(MapTrakToMovieRealm().map_RealmList_to_Rest_TRAKT_List(traktList =dataList ))
+                    for (data  in dataList) {
+                        cache.putTraktObjectInRealm(MapTrakToMovieRealm().map_Movie_From_TRAKT_to_Realm_Return_TraktMovieInfo(data))
+                        //cache.putTraktList(MapTrakToMovieRealm().map_RealmList_to_Rest_TRAKT_List(traktList = dataList))
 
+                    }
                 } catch (e: ParseException) {
                     e.printStackTrace()
                 }
                 finally {
-                    for(trakt in dataList) {
+                    for (trakt in dataList) {
                         getTmdbDataObservable(trakt.getMovie()!!.getIds()!!.getTmdb()!!)
                     }
                 }
@@ -86,31 +86,36 @@ class DataRepository : IDataRepository {
         }
 
         traktListObservable.subscribeOn(scheduler1)
-                .observeOn(Schedulers.io())
+                .observeOn(Schedulers.from(Executors.newCachedThreadPool()))
                 .subscribe(do1)
 
 
     }
 
-    override fun getTmdbDataObservable(tag:Int){
+    override fun getTmdbDataObservable(tag: Int) {
 
-        println("Data: Repository: getTmdbDataObservable(): Called : Tag Value of TMDB id :Tag:  "+tag)
+        println("Data: Repository: getTmdbDataObservable(): Called : Tag Value of TMDB id :Tag:  " + tag)
         var tmdbObservable: Observable<TMDB>
-        tmdbObservable = restApiServiceTmdb.getTMDBDataObservable(tag,Constants.Constants.URL_TMDB_API_KEY)
-      //  val imageDomainObservable = tmdbObservable.map(Function<TMDB, ImageDomain> { data -> MapTraktDataToTraktDomain.map_Image_Url_From_TMDB_to_ImageDomain(data) })
+        tmdbObservable = restApiServiceTmdb.getTMDBDataObservable(tag, Constants.Constants.URL_TMDB_API_KEY)
+        //  val imageDomainObservable = tmdbObservable.map(Function<TMDB, ImageDomain> { data -> MapTraktDataToTraktDomain.map_Image_Url_From_TMDB_to_ImageDomain(data) })
 
         doNextImage(tmdbObservable)
 
 
     }
+    var counter: Int = 0
 
 
     private fun doNextImage(tmdbObservable: Observable<TMDB>) {
 
         val do11 = object : DisposableObserver<TMDB>() {
             override fun onNext(data: TMDB) {
+                counter++
+                println("Data: DataRepository: TMDB Called: Counter Value: counter:" + counter)
                 try {
                     cache.putImageList(MapTrakToMovieRealm().map_Image_URL_From_TMDB_to_Realm_Return_TraktMovieInfo(data))
+
+
 
                 } catch (e: ParseException) {
                     e.printStackTrace()
@@ -129,8 +134,8 @@ class DataRepository : IDataRepository {
             }
         }
 
-        tmdbObservable.subscribeOn(scheduler1)
-                .observeOn(Schedulers.io())
+        tmdbObservable.subscribeOn(scheduler2)
+                .observeOn(Schedulers.from(Executors.newCachedThreadPool()))
                 .subscribe(do11)
 
 
@@ -140,28 +145,24 @@ class DataRepository : IDataRepository {
     override fun getTraktDataObservable(): Observable<List<TraktDomain>> {
         println("Data: Repository : getTraktDataObservable(): Called")
 
-         var restTraktListObservable: Observable<List<Trakt>> = restApiServiceTrakt.getTrektDataObservable()
+        var restTraktListObservable: Observable<List<Trakt>> = restApiServiceTrakt.getTrektDataObservable()
 
-         val traktDomainListObservable = restTraktListObservable.map(Function<List<Trakt>, List<TraktDomain>> { trakt->MapTraktDataToTraktDomain.map_Trakt_List_To_Trakt_Domain(trakt)  })
+        val traktDomainListObservable = restTraktListObservable.map(Function<List<Trakt>, List<TraktDomain>> { trakt -> MapTraktDataToTraktDomain.map_Trakt_List_To_Trakt_Domain(trakt) })
 //        val traktDomainListObservable = restTraktListObservable.map(Function<List<Trakt>, List<TraktDomain>>(trakt -> MapTraktDataToTraktDomain.map_Trakt_List_To_Trakt_Domain(trakt) }
-                //       return traktDomainListObservable
+        //       return traktDomainListObservable
 
         return traktDomainListObservable
     }
 
 
-
-    fun findAllMovieData():List<TraktMovieInfo> {
+    fun findAllMovieData(): List<TraktMovieInfo> {
         return cache.getMovieList()
     }
 
-     fun findAllMovieImage():List<ImageMovieInfo> {
+    fun findAllMovieImage(): List<ImageMovieInfo> {
         return cache.getImageList()
     }
 
 
-
-
-
-   }
+}
 

@@ -40,8 +40,8 @@ class Presenter {
     fun get_Movie_list_From_Movie_DAO(){
         val listOfMovies: List<TraktMovieInfo> = movieDao.find_List_Of_All_Trending_Movies_Records()
         for(movie in listOfMovies){
-            println("App: Presenter: Movie name: "+movie.getTitle())
-            println("App: Presenter:"+movie.getid())
+            println("App: Presenter: Cache: Movie name: "+movie.getTitle())
+            println("App: Presenter: Cahce: Movie Id: "+movie.getid())
         }
 
     }
@@ -50,8 +50,8 @@ class Presenter {
         val listOfImages: List<ImageMovieInfo> = movieDao.find_List_Of_All_Images_Of_Movies()
 
         for(image in listOfImages){
-            println("App: Presenter: Image url: "+image.getid())
-            println("App: Presenter: Image id: "+image.getImageUrl())
+            println("App: Presenter: From Cache:  Image url: "+image.getid())
+            println("App: Presenter: From Cache: Image id: "+image.getImageUrl())
         }
     }
 

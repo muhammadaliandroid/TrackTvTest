@@ -2,7 +2,6 @@ package uk.co.mali.data.cache
 
 import android.util.Log
 import io.realm.Realm
-import io.realm.RealmList
 import java.util.*
 
 /**
@@ -51,6 +50,7 @@ class CacheProcessor {
     fun getMovieList():List<TraktMovieInfo>{
         val realm = Realm.getDefaultInstance()
         val dataList = realm.where(TraktMovieInfo::class.java).findAll()
+        println("Data: Cache: Size of Datalist of Movies: "+dataList.size)
         return dataList
 
     }
@@ -58,18 +58,27 @@ class CacheProcessor {
     fun getImageList():List<ImageMovieInfo>{
         val realm = Realm.getDefaultInstance()
         val imageList = realm.where(ImageMovieInfo::class.java).findAll()
+        println("Data: Cache: Size of imagelist of Movies: "+imageList.size)
         return imageList
 
     }
 
-    fun putTraktList(traktList: RealmList<TraktMovieInfo>){
+    fun putTraktList(traktList: List<TraktMovieInfo>){
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-
         realm.copyToRealmOrUpdate(traktList)
         realm.commitTransaction()
         realm.close()
     }
+
+    fun putTraktObjectInRealm(trakt: TraktMovieInfo){
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        realm.copyToRealmOrUpdate(trakt)
+        realm.commitTransaction()
+        realm.close()
+    }
+
 
     fun putImageList(image: ImageMovieInfo){
         val realm = Realm.getDefaultInstance()
