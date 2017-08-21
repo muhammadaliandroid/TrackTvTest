@@ -6,13 +6,14 @@ import uk.co.mali.data.cache.TraktMovieInfo
 import uk.co.mali.domain.model.pojo.trakt.TraktDomain
 import uk.co.mali.tracktvtest.injector.component.DaggerDaoComponent
 import uk.co.mali.tracktvtest.injector.module.DaoModule
+import uk.co.mali.tracktvtest.views.activities.ITraktView
 import javax.inject.Inject
 
 /**
  * Created by alig2 on 19/08/2017.
  */
 
-class Presenter {
+class Presenter(var iTrackview: ITraktView) {
 
     @Inject lateinit var movieDao : MovieDao
 
@@ -32,10 +33,12 @@ class Presenter {
 
 
 
+
     fun onCreate(){
         println("Presenter")
         movieDao.add_Records_of_All_Movies_from_Trakt_And_TMDB_API()
            }
+
 
     fun get_Movie_list_From_Movie_DAO(){
         val listOfMovies: List<TraktMovieInfo> = movieDao.find_List_Of_All_Trending_Movies_Records()
@@ -43,8 +46,10 @@ class Presenter {
             println("App: Presenter: Cache: Movie name: "+movie.getTitle())
             println("App: Presenter: Cahce: Movie Id: "+movie.getid())
         }
+        iTrackview.send_List_Of_Movies(listOfMovies)
 
     }
+
 
     fun get_Image_List_From_Movie_DAO(){
         val listOfImages: List<ImageMovieInfo> = movieDao.find_List_Of_All_Images_Of_Movies()
@@ -53,6 +58,7 @@ class Presenter {
             println("App: Presenter: From Cache:  Image id: "+image.getid())
             println("App: Presenter: From Cache: Image url: "+image.getImageUrl())
         }
+        iTrackview.send_List_Of_Images(listOfImages)
     }
 
     fun onPause(){

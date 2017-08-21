@@ -136,7 +136,7 @@ class DataRepository : IDataRepository {
             }
         }
 
-        tmdbObservable.subscribeOn(scheduler2)
+        tmdbObservable.subscribeOn(iRxSchedulers.compute())
                 .observeOn(Schedulers.from(Executors.newCachedThreadPool()))
                 .subscribe(do11)
 
