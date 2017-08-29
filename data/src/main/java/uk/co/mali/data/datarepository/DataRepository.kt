@@ -1,5 +1,6 @@
 package uk.co.mali.data.datarepository
 
+import android.content.Context
 import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.functions.Function
@@ -9,8 +10,8 @@ import uk.co.mali.data.TraktTvApplication
 import uk.co.mali.data.cache.CacheProcessor
 import uk.co.mali.data.cache.ImageMovieInfo
 import uk.co.mali.data.cache.TraktMovieInfo
-import uk.co.mali.data.mapper.MapTrakToMovieRealm
 import uk.co.mali.data.mapper.MapTraktDataToTraktDomain
+import uk.co.mali.data.mapper.MapTraktToMovieRealm
 import uk.co.mali.data.model.pojo.tmdb.TMDB
 import uk.co.mali.data.model.pojo.trakt.Trakt
 import uk.co.mali.data.net.RestApiTmdb
@@ -29,13 +30,15 @@ import javax.inject.Inject
 class DataRepository : IDataRepository {
 
 
+    @Inject lateinit var context: Context;
     @Inject lateinit var iRxSchedulers: IRxSchedulers
     @Inject lateinit var restApiServiceTrakt: RestApiTrakt
     @Inject lateinit var restApiServiceTmdb: RestApiTmdb
 
-    val mapperRealm: MapTrakToMovieRealm = MapTrakToMovieRealm()
-    private val scheduler1 = Schedulers.from(Executors.newCachedThreadPool())
-    private val scheduler2 = Schedulers.from(Executors.newCachedThreadPool())
+
+    val mapperRealm: MapTraktToMovieRealm = MapTraktToMovieRealm()
+    val scheduler1 = Schedulers.from(Executors.newCachedThreadPool())
+    val scheduler2 = Schedulers.from(Executors.newCachedThreadPool())
     val cache: CacheProcessor = CacheProcessor()
 
     var traktDomain: TraktDomain? = null
@@ -45,40 +48,24 @@ class DataRepository : IDataRepository {
     }
 
     override fun getCacheMovieData() {
-       // if (cache.isCached() && !cache.isExpired()) {
-        //    var traktMovieObservable: List<TraktMovieInfo> = cache.getMovieList()
-       /// } else {
-            var traktListObservable: Observable<List<Trakt>> = restApiServiceTrakt.getTrektDataObservable()
-            doNext(traktListObservable)
-       // }
+        var traktListObservable: Observable<List<Trakt>> = restApiServiceTrakt.getTrektDataObservable()
+        doNext(traktListObservable)
     }
 
     private fun doNext(traktListObservable: Observable<List<Trakt>>) {
-
         val do1 = object : DisposableObserver<List<Trakt>>() {
             override fun onNext(dataList: List<Trakt>) {
                 try {
-
-                    for (data  in dataList) {
-                        cache.putTraktObjectInRealm(MapTrakToMovieRealm().map_Movie_From_TRAKT_to_Realm_Return_TraktMovieInfo(data))
+                    for (data in dataList) {
+                        cache.putTraktObjectInRealm(MapTraktToMovieRealm().map_Movie_From_TRAKT_to_Realm_Return_TraktMovieInfo(data))
                         getTmdbDataObservable(data.getMovie()!!.getIds()!!.getTmdb()!!)
-
-                        //cache.putTraktList(MapTrakToMovieRealm().map_RealmList_to_Rest_TRAKT_List(traktList = dataList))
-
                     }
                 } catch (e: ParseException) {
                     e.printStackTrace()
                 }
-//                finally {
-//                    for (trakt in dataList) {
-//                        getTmdbDataObservable(trakt.getMovie()!!.getIds()!!.getTmdb()!!)
-//                    }
-//                }
-
             }
 
             override fun onError(e: Throwable) {
-
                 Log.e("Error", "E @ " + e.localizedMessage + "  Stack trace: " + e.stackTrace)
             }
 
@@ -86,12 +73,10 @@ class DataRepository : IDataRepository {
                 Log.d("Complete", "Complete")
             }
         }
-
-        traktListObservable.subscribeOn(scheduler1)
-                .observeOn(Schedulers.from(Executors.newCachedThreadPool()))
+        traktListObservable.subscribeOn(iRxSchedulers.io())
+                .observeOn(scheduler1)
+                .unsubscribeOn(iRxSchedulers.androidThread())
                 .subscribe(do1)
-
-
     }
 
     override fun getTmdbDataObservable(tag: Int) {
@@ -103,31 +88,16 @@ class DataRepository : IDataRepository {
 
         doNextImage(tmdbObservable)
 
-
     }
-    var counter: Int = 0
-
 
     private fun doNextImage(tmdbObservable: Observable<TMDB>) {
-
         val do11 = object : DisposableObserver<TMDB>() {
             override fun onNext(data: TMDB) {
-                counter++
-                println("Data: DataRepository: TMDB Called: Counter Value: counter:" + counter)
-                try {
-                    cache.putImageObjectRealm(MapTrakToMovieRealm().map_Image_URL_From_TMDB_to_Realm_Return_TraktMovieInfo(data))
-
-
-
-                } catch (e: ParseException) {
-                    e.printStackTrace()
-                }
-
-
+                println("Data: DataRepository: TMDB Called: Counter Value: counter:")
+                cache.putImageObjectRealm(MapTraktToMovieRealm().map_Image_URL_From_TMDB_to_Realm_Return_TraktMovieInfo(data))
             }
 
             override fun onError(e: Throwable) {
-
                 Log.e("Error", "E @ " + e.localizedMessage + "  Stack trace: " + e.stackTrace)
             }
 
@@ -135,14 +105,11 @@ class DataRepository : IDataRepository {
                 Log.d("Complete", "Complete")
             }
         }
-
         tmdbObservable.subscribeOn(iRxSchedulers.compute())
-                .observeOn(Schedulers.from(Executors.newCachedThreadPool()))
+                .observeOn(scheduler2)
+                .unsubscribeOn(iRxSchedulers.androidThread())
                 .subscribe(do11)
-
-
     }
-
 
     override fun getTraktDataObservable(): Observable<List<TraktDomain>> {
         println("Data: Repository : getTraktDataObservable(): Called")
@@ -157,14 +124,13 @@ class DataRepository : IDataRepository {
     }
 
 
-    fun findAllMovieData(): List<TraktMovieInfo> {
+    fun findAllMovieData(): Observable<ArrayList<TraktMovieInfo>>? {
         return cache.getMovieList()
     }
 
-    fun findAllMovieImage(): List<ImageMovieInfo> {
+    fun findAllMovieImage(): Observable<ArrayList<ImageMovieInfo>>? {
         return cache.getImageList()
     }
 
 
 }
-

@@ -10,7 +10,7 @@ import java.util.*
 /**
  * Created by alig2 on 20/08/2017.
  */
-class MapTrakToMovieRealm {
+class MapTraktToMovieRealm {
 
     companion object {
         val traktMovieInfo: TraktMovieInfo = TraktMovieInfo()
@@ -46,8 +46,12 @@ class MapTrakToMovieRealm {
 
     fun map_Image_URL_From_TMDB_to_Realm_Return_TraktMovieInfo(tmdb: TMDB): ImageMovieInfo {
         imageMovieInfo.setId(tmdb.getId())
-        var link: String = "https://image.tmdb.org/t/p/w640"
+        imageMovieInfo.setGenre(tmdb.getGenres().toString())
+        imageMovieInfo.setOverview(tmdb.getOverview()!!)
+        imageMovieInfo.setReleaseDate(tmdb.getReleaseDate()!!)
+         var link: String = "https://image.tmdb.org/t/p/w640"
         imageMovieInfo.setImageUrl(link + tmdb.getPosterPath())
+
         return imageMovieInfo
     }
 

@@ -1,11 +1,18 @@
 package uk.co.mali.tracktvtest.presenter;
 
+import android.content.Context
+import android.util.Log
+import io.reactivex.Observable
+import io.reactivex.observers.DisposableObserver
 import uk.co.mali.data.TraktTvApplication
 import uk.co.mali.data.cache.ImageMovieInfo
 import uk.co.mali.data.cache.TraktMovieInfo
+import uk.co.mali.data.util.IRxSchedulers
 import uk.co.mali.domain.model.pojo.trakt.TraktDomain
-import uk.co.mali.tracktvtest.injector.component.DaggerDaoComponent
-import uk.co.mali.tracktvtest.injector.module.DaoModule
+import uk.co.mali.tracktvtest.injector.component.DaggerPresenterComponent
+import uk.co.mali.tracktvtest.injector.module.PresenterModule
+import uk.co.mali.tracktvtest.util.NetworkUtils
+import uk.co.mali.tracktvtest.util.UiUtils
 import uk.co.mali.tracktvtest.views.activities.ITraktView
 import javax.inject.Inject
 
@@ -13,51 +20,97 @@ import javax.inject.Inject
  * Created by alig2 on 19/08/2017.
  */
 
-class TraktPresenter(var iTrackview: ITraktView) {
+class TraktPresenter : IRealmFeed {
 
-    @Inject lateinit var movieDao : MovieDao
 
-    //private var listTraktDomain : Array<TraktDomain>?=null.
+    @Inject lateinit var context : Context
+    @Inject lateinit var iRxSchedulers : IRxSchedulers
+    @Inject lateinit var movieImageProcessor: MovieImageProcessor
+
+    var iTraktview: ITraktView ?= null
+
+    var iRealmFeed: IRealmFeed = this
     var listTraktDomains : ArrayList<TraktDomain>? = ArrayList<TraktDomain>()
 
     init {
-
-        DaggerDaoComponent.builder()
-                .daoModule(DaoModule())
+        DaggerPresenterComponent.builder()
+                .presenterModule(PresenterModule())
                 .appComponent(TraktTvApplication.appComponent)
                 .build()
                 .inject(this)
 
     }
 
+    fun onCreate(mainView: ITraktView){
+        iTraktview = mainView
+        var networkObservable= isNetworkAvailable()
+        doNextOnNetwork(networkObservable)
+    }
 
-
-
-
-    fun onCreate(){
-        movieDao.add_Records_of_All_Movies_from_Trakt_And_TMDB_API()
-           }
-
-
-    fun get_Movie_list_From_Movie_DAO(){
-        val listOfMovies: List<TraktMovieInfo> = movieDao.find_List_Of_All_Trending_Movies_Records()
-        for(movie in listOfMovies){
-            println("App: TraktPresenter: Cache: Movie name: "+movie.getTitle())
-            println("App: TraktPresenter: Cahce: Movie Id: "+movie.getid())
+    private fun doNextOnNetwork(networkObservable: Observable<Boolean>) {
+        val doNetwork = object : DisposableObserver<Boolean>() {
+            override fun onNext(network: Boolean) {
+                if(network){
+                    println("Network is Available")
+                    onExecute()
+                    }
+                else
+                {
+                    println("Network is Not Available")
+                    UiUtils.showSnackbar(iTraktview!!.getMainView()!!,"Network is Not Available")
+                }
+            }
+            override fun onError(e: Throwable) {
+                Log.e("Error", "E @ " + e.localizedMessage + "  Stack trace: " + e.stackTrace)
+            }
+            override fun onComplete() {
+                Log.d("Complete", "Complete")
+            }
         }
-        iTrackview.send_List_Of_Movies(listOfMovies)
+        networkObservable.subscribeOn(iRxSchedulers.internet())
+                .observeOn(iRxSchedulers.runOnBackground())
+                .subscribe(doNetwork)
+    }
+
+
+    fun isNetworkAvailable(): Observable<Boolean> {
+        return NetworkUtils.isNetworkAvailableObservable(context)
+    }
+
+
+    private fun onExecute(){
+        movieImageProcessor.add_Records_of_All_Movies_from_Trakt_And_TMDB_API()
+    }
+
+    fun getDBMovieList(){
+        movieImageProcessor.find_List_Of_All_Trending_Movies_Records(iRealmFeed)
+    }
+
+    fun getDBImageList(){
+        movieImageProcessor.find_List_Of_All_Images_Of_Movies(iRealmFeed)
 
     }
 
 
-    fun get_Image_List_From_Movie_DAO(){
-        val listOfImages: List<ImageMovieInfo> = movieDao.find_List_Of_All_Images_Of_Movies()
+    override fun getMovieList(list: List<TraktMovieInfo>) {
+    //    val listOfMovies= movieImageProcessor.find_List_Of_All_Trending_Movies_Records(iRealmFeed)
+//        for(movie in list){
+//            println("App: TraktPresenter: Cache: Movie name: "+movie.getTitle())
+//            println("App: TraktPresenter: Cahce: Movie Id: "+movie.getid())
+//        }
+        iTraktview!!.send_List_Of_Movies(list)
 
-        for(image in listOfImages){
-            println("App: TraktPresenter: From Cache:  Image id: "+image.getid())
-            println("App: TraktPresenter: From Cache: Image url: "+image.getImageUrl())
-        }
-        iTrackview.send_List_Of_Images(listOfImages)
+    }
+
+    override fun getImageList(list: List<ImageMovieInfo>) {
+      //  var listOfImages = movieImageProcessor.find_List_Of_All_Images_Of_Movies(iRealmFeed)
+//        for(image in list){
+//            println("App: TraktPresenter: From Cache:  Image id: "+image.getid())
+//            println("App: TraktPresenter: From Cache: Image url: "+image.getImageUrl())
+//        }
+        iTraktview!!.send_List_Of_Images(list)
+
+
     }
 
 

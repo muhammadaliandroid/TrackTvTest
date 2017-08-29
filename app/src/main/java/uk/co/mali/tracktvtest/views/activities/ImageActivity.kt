@@ -13,7 +13,7 @@ class ImageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image)
 
-        var imageLink: String = intent.extras.get("imageLink") as String
+        var imageLink: String? = intent.extras.get("imageLink") as String
         ivMovieImage = findViewById(R.id.ivFullImage)
         Glide.with(this).load(imageLink.toString()!!).into(ivMovieImage)
 

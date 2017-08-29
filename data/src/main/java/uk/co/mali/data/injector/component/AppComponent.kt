@@ -1,5 +1,6 @@
 package uk.co.mali.data.injector.component
 
+import android.content.Context
 import dagger.Component
 import uk.co.mali.data.datarepository.DataRepository
 import uk.co.mali.data.injector.module.NetModule
@@ -19,6 +20,8 @@ import uk.co.mali.data.util.IRxSchedulers
 interface AppComponent {
 
     fun inject(dataRepository: DataRepository)
+
+    fun context(): Context
     fun iRxSchedulers(): IRxSchedulers
     fun restApiServiceTrakt(): RestApiTrakt
     fun restApiServiceTmdb():RestApiTmdb

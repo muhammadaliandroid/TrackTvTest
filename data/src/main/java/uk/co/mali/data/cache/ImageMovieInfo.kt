@@ -11,6 +11,11 @@ open class ImageMovieInfo: RealmObject() {
     @PrimaryKey
     private var id: Int? = null
     private var imageUrl:String ?=null
+    private var genre:String ?=null
+    private var overview:String ?=null
+    private var releaseDate:String ?=null
+
+
 
     fun setId(id: Int?) {
         this.id = id
@@ -25,4 +30,27 @@ open class ImageMovieInfo: RealmObject() {
     fun getImageUrl(): String? {
         return imageUrl
     }
+
+    fun setGenre(genre: String) {
+        this.genre = genre
+    }
+    fun getGenre(): String? {
+        return genre
+    }
+
+    fun setOverview(overview: String) {
+        this.overview = genre
+    }
+    fun getOverview(): String? {
+        return overview
+    }
+
+    fun setReleaseDate(releaseDate: String) {
+        this.releaseDate = releaseDate
+    }
+    fun getReleaseDate(): String? {
+        return releaseDate
+    }
+
+
 }

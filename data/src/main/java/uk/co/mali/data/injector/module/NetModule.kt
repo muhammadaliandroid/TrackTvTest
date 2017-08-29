@@ -22,6 +22,12 @@ class NetModule(private val context: Context) {
 
     @AppScope
     @Provides
+    fun provideContext():Context{
+        return context
+    }
+
+    @AppScope
+    @Provides
     fun provideCacheFile(): File {
         return context.filesDir
     }
