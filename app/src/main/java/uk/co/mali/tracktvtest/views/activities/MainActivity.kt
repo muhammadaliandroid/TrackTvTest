@@ -69,10 +69,13 @@ class MainActivity : AppCompatActivity(), ITraktView {
     }
 
 
-    override fun startImageActivity(imageLink: String?) {
+    override fun startImageActivity(title: String?, imageLink: String?, releaseYear: String?) {
 
         val intent = Intent(this, ImageActivity::class.java)
+        intent.putExtra("title", title)
         intent.putExtra("imageLink", imageLink)
+        intent.putExtra("releaseYear", releaseYear)
+
         startActivity(intent)
 
     }

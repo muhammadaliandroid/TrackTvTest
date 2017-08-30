@@ -42,19 +42,22 @@ class TraktRecyclerAdapter(private val context: Context) : RecyclerView.Adapter<
         var movie = listMovies!!.get(position)
         var id:Int = movie.getid()!!
         var imageLink: String? = null
+        var imageReleaseDate: String? = null
         for(imageURL in listImageURL!!){
             if(movie.getid()==imageURL.getid()){
                 imageLink = imageURL.getImageUrl()
+                imageReleaseDate= imageURL.getReleaseDate()
+
             }
         }
 
         println("App: Adapter: Bind Method: images: "+imageLink)
         println("App: Adapter: Bind: Method: movie: id:  "+movie.getid())
 
-        holder!!.bind(movie,imageLink)
+        holder!!.bind(movie,imageLink,imageReleaseDate)
         holder.setOnListItemClicked(object : OnListItemClicked {
             override fun onListItemClicked(view: View, position: Int) {
-                (context as MainActivity).startImageActivity(imageLink)
+                (context as MainActivity).startImageActivity(movie.getTitle(),imageLink,imageReleaseDate)
             }
 
         })

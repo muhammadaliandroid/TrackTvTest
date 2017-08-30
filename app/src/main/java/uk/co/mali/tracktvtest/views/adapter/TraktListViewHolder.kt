@@ -16,9 +16,9 @@ class TraktListViewHolder : RecyclerView.ViewHolder, View.OnClickListener{
         onListItemClicked!!.onListItemClicked(v!!, adapterPosition)
     }
 
-    var tv_title : TextView? = null
-    var movieImage : ImageView? = null
-    var tv_year : TextView? = null
+    var tv_ItemTitle : TextView? = null
+    var iv_ItemMovieImage : ImageView? = null
+    var tv_ItemReleaseYear : TextView? = null
 
     private var onListItemClicked: OnListItemClicked? = null
 
@@ -27,20 +27,21 @@ class TraktListViewHolder : RecyclerView.ViewHolder, View.OnClickListener{
     constructor(itemView:View) : super(itemView) {
         println("App: Adapter: ViewHolder Constructor")
 
-        tv_title= itemView.findViewById(R.id.tv_Movie_Title)
-        movieImage= itemView.findViewById(R.id.iv_Movie_Image)
-        tv_year = itemView.findViewById(R.id.tv_Movie_Year)
+        tv_ItemTitle= itemView.findViewById(R.id.tv_Movie_Title)
+        iv_ItemMovieImage= itemView.findViewById(R.id.iv_Movie_Image)
+        tv_ItemReleaseYear = itemView.findViewById(R.id.tv_Movie_Release_Year)
         itemView.setOnClickListener(this)
     }
 
 
-    fun bind(movie: TraktMovieInfo, image: String?) {
+    fun bind(movie: TraktMovieInfo, image: String?, imageReleaseDate: String?) {
 
         println("App: Adapter: Bind: images: "+image)
         println("App: Adapter: Bind: movie: id:  "+movie.getid())
 
-        tv_title!!.setText(movie.getTitle()!!)
-        Glide.with(itemView.getContext()).load(image.toString()!!).into(movieImage)
+        tv_ItemTitle!!.setText(movie.getTitle()!!)
+        Glide.with(itemView.getContext()).load(image.toString()!!).into(iv_ItemMovieImage)
+        tv_ItemReleaseYear!!.setText("Release Date: "+imageReleaseDate)
 
     }
 
