@@ -1,0 +1,87 @@
+1- LIST TRAKT
+1- OBJECT of TMDB - FOREACH : LIST OF TRAKT
+
+
+1- LIST OF MOVIES
+1- LIST OF IMAGES
+
+Combining Observables
+And/Then/When, CombineLatest, Join, Merge, StartWith, Switch, and Zip
+
+ZIP: (T) TRAKT LIST, (V) TMDB, (R) OBSERVABLE LIST OF MOVIES (T, V)
+
+Actual: T-RealmRealm and V-RealList
+X Cross Check duing RecyclerView();
+
+R-WILL BE CACHED
+
+ACTUAL : 
+CLOUD-> T (List) - Iterated LIST --> (V) ---LIST( V-LIST) -- T-LIST REALM and V-LIST REALM
+RECYCLER-ADAPTER X Cross Check - VIEWHOLDER
+
+
+1st: 
+iSTORE INTERFACE(LOCAL - CLOUD)
+
+CALL: 
+1st Phase Of Development: 
+If(Network)
+-> CheckCache-> CLOUD: T-LIST- - ZIP (V)
+
+OBJECT T.ITEM ->V =  (LIST R) ITEM-T Zipped V
+
+(CACHE - R-LIST)
+
+MAPPING REALM - TO - DOMAIN
+
+APP - DOMAIN - TO - MODEL
+
+SHOW it in RECYLER
+
+if(Network)
+(UI Message: from Cache)
+
+->CheckCache - notExpired
+-LOCAL Source-
+-CACHE - > REALM TO DOMAIN
+APP DOMAIN TO MODEL
+Show It on Recycler.
+
+IF(!Network)
+UI Message:
+Check Cache: 
+If(Cache)
+
+-CACHE - > REALM TO DOMAIN
+APP DOMAIN TO MODEL
+Show It on Recycler.
+
+TOAST - From Cache: 
+Alert Message:
+
+
+If(!Network)
+No Cache()
+
+Return UI Message (Network Not Available)
+
+
+
+
+DATA --- LAYER
+CLOUD- > API1 T - > API2 V
+CLOUD / LOCAL DATASTORE / DATA SOURCE
+ZIP/MERGE/ COMBINELATEST/ JOIN 
+TMDB : Source : DOWNLOAD IMAGES: Store in Local context:FileDir
+Store the Link of Images: Into OBSERVABLE (R) (T),(V) ZIP/MERGE/JOIN(R)
+
+
+2nd : 
+
+DOMAIN OBJECT 
+
+Data-Object : List of Movies!
+
+MAP THIS : TO DATA / REALM - CACHE
+
+ 

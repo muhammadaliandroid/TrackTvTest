@@ -39,12 +39,12 @@ class TraktRecyclerAdapter(private val context: Context) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: TraktListViewHolder?, position: Int) {
 
-        var movie = listMovies!!.get(position)
+        var movie = listMovies!!.get(position) //T
         var id:Int = movie.getid()!!
         var imageLink: String? = null
         var imageReleaseDate: String? = null
-        for(imageURL in listImageURL!!){
-            if(movie.getid()==imageURL.getid()){
+        for(imageURL in listImageURL!!){ // V
+            if(movie.getid()==imageURL.getid()){ // T.id = V.id {assign}
                 imageLink = imageURL.getImageUrl()
                 imageReleaseDate= imageURL.getReleaseDate()
 
